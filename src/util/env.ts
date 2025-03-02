@@ -1,5 +1,3 @@
- 
- 
 /* eslint-disable no-redeclare */
 import dotenv from 'dotenv';
 

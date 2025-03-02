@@ -49,9 +49,10 @@ const initialise = async (app: Express) => {
 
     app.listen(PORT, () => {
       const ENV = process.env.NODE_ENV || 'development';
+      const HOST = process.env.HOST || `http://localhost:${PORT}`;
 
       log.skip();
-      log.info(`** ${colours.bright}Server listening on ${colours.underline}http://localhost:${PORT}/${colours.reset} **`);
+      log.info(`** ${colours.bright}Server listening on ${colours.underline}${HOST}${colours.reset} **`);
       if (ENV !== 'production') {
         log.info(`${colours.dim}note: this is a development server - for production use, see deployment docs${colours.reset}`);
       }
