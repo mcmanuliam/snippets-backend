@@ -6,7 +6,7 @@ import globals from 'globals';
 export default [
   eslint.configs.recommended,
   {
-    files: ["**/*.ts"],
+    files: ['**/*.ts'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -23,36 +23,36 @@ export default [
     rules: {
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
-      "@typescript-eslint/naming-convention": [
-        "error",
+      '@typescript-eslint/naming-convention': [
+        'error',
         {
-          "selector": "variable",
-          "format": ["camelCase", "UPPER_CASE"],
-          "leadingUnderscore": "allow"
+          'selector': 'variable',
+          'format': ['camelCase', 'UPPER_CASE'],
+          'leadingUnderscore': 'allow'
         }
       ],
       '@/object-curly-spacing': ['error', 'never'],
-      "@/indent": ["error", 2],
-      "@/quotes": [
-        "error",
-        "single",
+      '@/indent': ['error', 2],
+      '@/quotes': [
+        'error',
+        'single',
         {
-          "allowTemplateLiterals": true
+          'allowTemplateLiterals': true
         }
       ],
-      "sort-keys": [
-        "error",
-        "asc",
+      'sort-keys': [
+        'error',
+        'asc',
         {
-          "caseSensitive": true,
-          "natural": false
+          'caseSensitive': true,
+          'natural': false
         }
       ],
-      "comma-dangle": [
-        "error",
-        "always-multiline"
+      'comma-dangle': [
+        'error',
+        'always-multiline'
       ],
-      "@typescript-eslint/explicit-module-boundary-types": "error"
+      '@typescript-eslint/explicit-module-boundary-types': 'error'
     }
   }
 ];
