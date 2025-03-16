@@ -12,6 +12,12 @@ export enum Difficulty {
   IMPOSSIBLE = 'impossible'
 }
 
+export interface TestCase {
+  input: string;
+
+  expectedOutput: string;
+}
+
 export interface SnippetInterface {
   examples: string[];
 
@@ -21,15 +27,18 @@ export interface SnippetInterface {
 
   template: string;
 
-  user: Types.ObjectId;
+  user: string;
 
-  difficulty: number;
+  difficulty: Difficulty;
+
+  testCases?: TestCase[];
 }
+
 
 export interface SnippetDocument extends SnippetInterface, Document<Types.ObjectId> {};
 export interface SnippetModelInterface extends Model<SnippetInterface> {};
 
-const snippetDefinition: SchemaDefinition = {
+const snippetDefinition: SchemaDefinition<SnippetInterface> = {
   description: {
     required: true,
     type: String,
@@ -51,6 +60,13 @@ const snippetDefinition: SchemaDefinition = {
     type: String,
   },
 
+  testCases: {
+    type: [{
+      expectedOutput: String,
+      input: String,
+    }],
+  },
+
   title: {
     required: true,
     type: String,
@@ -59,7 +75,7 @@ const snippetDefinition: SchemaDefinition = {
   user: {
     ref: userModel.collection.name,
     required: true,
-    type: Types.ObjectId,
+    type: String,
   },
 };
 
