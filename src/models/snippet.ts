@@ -27,7 +27,7 @@ export interface SnippetInterface {
 
   template: string;
 
-  user: string;
+  user: Types.ObjectId;
 
   difficulty: Difficulty;
 
@@ -75,7 +75,7 @@ const snippetDefinition: SchemaDefinition<SnippetInterface> = {
   user: {
     ref: userModel.collection.name,
     required: true,
-    type: String,
+    type: Schema.Types.ObjectId,
   },
 };
 

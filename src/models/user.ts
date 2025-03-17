@@ -6,6 +6,8 @@ export interface UserInterface {
   username: string;
 
   avatar: string;
+
+  title: string;
 }
 
 export interface UserDocument extends UserInterface, Document<Types.ObjectId> {};
@@ -20,6 +22,10 @@ const definition: SchemaDefinition = {
     required: true,
     type: String,
     unique: true,
+  },
+
+  title: {
+    type: String,
   },
 
   username: {
