@@ -1,4 +1,5 @@
 import {find, findById} from '../controllers/snippets.controller';
+import {createSubmission} from '../controllers/submissions.controller';
 import {RouteConfig} from '../util/route.factory';
 import RouteFactory from '../util/route.factory';
 
@@ -12,6 +13,11 @@ const snippetRoutes: RouteConfig[] = [
     handler: findById,
     method: 'get',
     path: '/:id',
+  },
+  {
+    handler: createSubmission,
+    method: 'post',
+    path: '/:id/submission',
   },
 ];
 
