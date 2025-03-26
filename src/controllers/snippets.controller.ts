@@ -1,6 +1,7 @@
 import {SnippetDocument, snippetModel} from '../models/snippet';
 import {Request, Response} from 'express';
 import {Types} from 'mongoose';
+import {submissionModel} from '../models/submission';
 
 export async function find(req: Request, res: Response): Promise<void> {
   try {
@@ -27,6 +28,19 @@ export async function findById(req: Request, res: Response): Promise<void> {
     }
 
     res.ok(snippet);
+  } catch (error) {
+    res.negotiate(error);
+  }
+};
+
+export async function update(req: Request, res: Response): Promise<void> {
+  if (!req.params.id || !req.body.payload) {
+    return res.badRequest();
+  }
+
+  try {
+    await submissionModel.findByIdAndUpdate<SnippetDocument>(new Types.ObjectId(req.params.id), req.body.payload)
+    res.ok();
   } catch (error) {
     res.negotiate(error);
   }
