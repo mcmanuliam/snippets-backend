@@ -1,12 +1,19 @@
 import axios, {AxiosError} from 'axios';
-import {TestCaseInterface} from '../../models/snippet';
-import {AbstractRemoteCodeExecutionImpl, TestResult} from './abstract-remote-code-exec.impl';
+import {AbstractRemoteCodeExecutionImpl, ExecutionResponse} from './abstract-remote-code-exec.impl';
 import env from '../../util/env';
 
 const enum Conf {
   BASE_URL = '/submissions',
   MEMORY_LIMIT = 128000,
-  CPU_TIME_LIMIT = 5
+  CPU_TIME_LIMIT = 5,
+}
+
+const enum ErrorMessages {
+  NO_OUTPUT = 'No Output',
+  UNKOWN_ERROR = 'An unknown error occurred',
+  EXEC_FAILED = 'Execution failed',
+  INVALID_FORMAT = 'Invalid submission format. Check your code/input formatting.',
+  INVALID_KEYS = 'Invalid API credentials. Check your Judge0 keys.',
 }
 
 interface Judge0ApiResponse {
@@ -15,6 +22,8 @@ interface Judge0ApiResponse {
   stderr?: string | null;
   compile_output?: string | null;
   message?: string | null;
+  memory: number;
+  time: string,
   status?: {
     id: number;
     description: string;
@@ -30,25 +39,18 @@ export class Judge0RemoteCodeExecutionImpl extends AbstractRemoteCodeExecutionIm
     'x-rapidapi-key': env('JUDGE_KEY'),
   };
 
-  public async executeCode(code: string, testCases: TestCaseInterface[], language: number): Promise<TestResult[]> {
-    const submissionPromises = testCases.map(testCase => this.#processTestCase(code, testCase, language));
-    return Promise.all(submissionPromises);
-  }
-
-  async #processTestCase(
+  public async executeCode(
     code: string,
-    {input, expectedOutput}: TestCaseInterface,
     language: number,
-  ): Promise<TestResult> {
+  ): Promise<ExecutionResponse> {
     try {
-      const createResponse = await axios.post<Judge0ApiResponse>(
+      const response = await axios.post<Judge0ApiResponse>(
         this.#baseUrl,
         {
           cpu_time_limit: Conf.CPU_TIME_LIMIT,
           language_id: language,
           memory_limit: Conf.MEMORY_LIMIT,
           source_code: code,
-          stdin: input,
         },
         {
           headers: this.#headers,
@@ -60,34 +62,30 @@ export class Judge0RemoteCodeExecutionImpl extends AbstractRemoteCodeExecutionIm
         },
       );
 
-      return this.#handleSubmissionResponse(createResponse.data, input, expectedOutput);
+      return this.#handleSubmissionResponse(response.data);
     } catch (error) {
-      return this.#handleSubmissionError(error, input);
+      return this.#handleSubmissionError(error);
     }
   }
 
-  #handleSubmissionResponse(
-    {stdout, stderr, compile_output, message, status}: Judge0ApiResponse,
-    input: string,
-    expectedOutput: string,
-  ): TestResult {
-    if (status?.id && status.id >= 6) {
+  #handleSubmissionResponse(res: Judge0ApiResponse): ExecutionResponse {
+    if (res.status?.id && res.status.id >= 6) {
       return {
-        input,
-        isValid: false,
-        result: (message && stderr) ? `${message}\n${stderr}` : 'Execution failed',
-      };
+        output: (res.message && res.stderr) ? `${res.message}\n${res.stderr}` : ErrorMessages.EXEC_FAILED,
+        peakMemb: res.memory,
+        runtime: parseFloat(res.time),
+      }
     }
 
     return {
-      input,
-      isValid: this.validateTestCase(expectedOutput, stdout || ''),
-      result: stdout || stderr || compile_output || 'No output',
-    };
+      output: res.stdout || res.stderr || res.compile_output || ErrorMessages.NO_OUTPUT,
+      peakMemb: res.memory,
+      runtime: parseFloat(res.time),
+    }
   }
 
-  #handleSubmissionError(error: unknown, input: string): TestResult {
-    let errorMessage = 'An unknown error occurred';
+  #handleSubmissionError(error: unknown): ExecutionResponse {
+    let errorMessage = ErrorMessages.UNKOWN_ERROR as string;
 
     if (axios.isAxiosError(error)) {
       errorMessage = this.#parseAxiosError(error);
@@ -95,25 +93,22 @@ export class Judge0RemoteCodeExecutionImpl extends AbstractRemoteCodeExecutionIm
       errorMessage = `Runtime error: ${error.message}`;
     }
 
-    return {input, isValid: false, result: errorMessage};
+    return {
+      output: errorMessage,
+      peakMemb: 0,
+      runtime: 0,
+    }
   }
 
   #parseAxiosError(error: AxiosError): string {
     if (error.response?.status === 422) {
-      return 'Invalid submission format. Check your code/input formatting.';
+      return ErrorMessages.INVALID_FORMAT;
     }
 
     if (error.response?.status === 401) {
-      return 'Invalid API credentials. Check your Judge0 keys.';
+      return ErrorMessages.INVALID_KEYS;
     }
 
     return error.response?.data ? `${JSON.stringify(error.response.data)}` : `${error.message}`;
-  }
-
-  public validateTestCase(expected: string, actual: string): boolean {
-    const safeExpected = (expected || '').trim();
-    const safeActual = (actual || '').trim();
-
-    return safeExpected === safeActual;
   }
 }

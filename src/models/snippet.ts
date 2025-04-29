@@ -12,12 +12,6 @@ export enum Difficulty {
   IMPOSSIBLE = 'impossible'
 }
 
-export interface TestCaseInterface {
-  input: string;
-
-  expectedOutput: string;
-}
-
 export interface SignatureInterface {
   code: string;
 
@@ -36,8 +30,6 @@ export interface SnippetInterface {
   user: Types.ObjectId;
 
   difficulty: Difficulty;
-
-  testCases?: TestCaseInterface[];
 }
 
 
@@ -59,13 +51,6 @@ const snippetDefinition: SchemaDefinition<SnippetInterface> = {
   signature: {
     required: true,
     type: Schema.Types.Mixed,
-  },
-
-  testCases: {
-    type: [{
-      expectedOutput: String,
-      input: String,
-    }],
   },
 
   title: {

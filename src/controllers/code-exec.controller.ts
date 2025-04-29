@@ -1,7 +1,6 @@
 import {Request, Response} from 'express';
 import {snippetModel, SnippetDocument} from '../models/snippet';
 import {Judge0RemoteCodeExecutionImpl} from '../lib/remote-code-exec/judge.impl';
-import {TestCaseInterface} from '../models/snippet';
 
 const provider = new Judge0RemoteCodeExecutionImpl();
 
@@ -20,8 +19,7 @@ export async function executeCode(req: Request, res: Response): Promise<void> {
     }
 
     const {language} = snippet.signature;
-    const testCases: TestCaseInterface[] = snippet.testCases || [];
-    const results = await provider.executeCode(code, testCases, language);
+    const results = await provider.executeCode(code, language);
 
     return res.ok(results);
   } catch (error) {
