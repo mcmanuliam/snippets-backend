@@ -1,10 +1,10 @@
-import {requestLogger, errorLogger} from './util/middleware/request';
+import {requestLogger, errorLogger} from './lib/logs/request';
 import {responseHelpers} from './util/response-helpers';
 import {platformConfig} from './config/platform.config';
-import {sessionOptions} from './util/middleware/session';
-import {corsConfig} from './util/middleware/cors';
+import {sessionOptions} from './lib/middleware/session';
+import {corsConfig} from './lib/middleware/cors';
 import {loggingConfig} from './config/logging.config';
-import {log} from './util/logs/logger';
+import {log} from './lib/logs/logger';
 import cookieParser from 'cookie-parser';
 import appRouter from './routes/routes';
 import {Express} from 'express';

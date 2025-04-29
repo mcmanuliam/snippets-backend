@@ -1,4 +1,4 @@
-import {RequestInterface, requestModel} from '../../models/logs/request';
+import {RequestInterface, requestModel} from '../../models/request';
 
 const requestsQueue: RequestInterface[] = [];
 const BATCH_SIZE = 10;

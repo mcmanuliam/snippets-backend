@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
-import {RequestInterface} from '../../models/logs/request';
-import {StatusError} from '../response-helpers';
+import {RequestInterface} from '../../models/request';
+import {StatusError} from '../../util/response-helpers';
 import {queueRequest} from '../logs/request-queue';
 
 const enum DefaultMessages {

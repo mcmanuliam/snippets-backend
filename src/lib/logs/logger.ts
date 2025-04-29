@@ -1,4 +1,4 @@
-import {colours} from '../colours'
+import {colours} from '../../util/colours'
 
 export const logLevels = {
   debug: colours.fg.cyan,

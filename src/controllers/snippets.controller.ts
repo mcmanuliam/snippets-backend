@@ -2,11 +2,14 @@ import {SnippetDocument, snippetModel} from '../models/snippet';
 import {Request, Response} from 'express';
 import {Types} from 'mongoose';
 import {submissionModel} from '../models/submission';
+import {SnippetsPipelineBuilder} from '../lib/snippets.pipeline-builder';
 
 export async function find(req: Request, res: Response): Promise<void> {
   try {
-    const snippets = await snippetModel.find<SnippetDocument>(req.query ?? {})
+    const builder = new SnippetsPipelineBuilder(req.query ?? {});
+    const pipeline = builder.build();
 
+    const snippets = await snippetModel.aggregate(pipeline);
     res.ok(snippets);
   } catch (error) {
     res.negotiate(error);

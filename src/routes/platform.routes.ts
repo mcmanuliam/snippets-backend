@@ -1,6 +1,6 @@
 import {health} from '../controllers/platform.controller';
-import {RouteConfig} from '../util/route.factory';
-import RouteFactory from '../util/route.factory';
+import {RouteConfig} from '../lib/route.factory';
+import RouteFactory from '../lib/route.factory';
 
 const platformRoutes: RouteConfig[] = [{
   handler: health,

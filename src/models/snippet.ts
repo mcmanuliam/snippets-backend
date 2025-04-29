@@ -16,12 +16,14 @@ export interface SignatureInterface {
   code: string;
 
   language: number;
-
-  functionName: string;
 }
 
 export interface SnippetInterface {
   title: string;
+
+  image?: string;
+
+  tags: string[];
 
   description: string;
 
@@ -30,6 +32,8 @@ export interface SnippetInterface {
   user: Types.ObjectId;
 
   difficulty: Difficulty;
+
+  deleted?: boolean;
 }
 
 
@@ -37,6 +41,10 @@ export interface SnippetDocument extends SnippetInterface, Document<Types.Object
 export interface SnippetModelInterface extends Model<SnippetInterface> {};
 
 const snippetDefinition: SchemaDefinition<SnippetInterface> = {
+  deleted: {
+    type: Boolean,
+  },
+
   description: {
     required: true,
     type: String,
@@ -48,7 +56,17 @@ const snippetDefinition: SchemaDefinition<SnippetInterface> = {
     type: String,
   },
 
+  image: {
+    type: String,
+  },
+
   signature: {
+    required: true,
+    type: Schema.Types.Mixed,
+  },
+
+  tags: {
+    default: [],
     required: true,
     type: Schema.Types.Mixed,
   },

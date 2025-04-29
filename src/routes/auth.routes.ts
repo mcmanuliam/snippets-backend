@@ -1,7 +1,7 @@
 import {githubCallback, logout} from '../controllers/auth.controller';
-import {authenticated} from '../util/middleware/authenticated';
-import {RouteConfig} from '../util/route.factory';
-import RouteFactory from '../util/route.factory';
+import {authenticated} from '../lib/middleware/authenticated';
+import {RouteConfig} from '../lib/route.factory';
+import RouteFactory from '../lib/route.factory';
 import passport from '../passport';
 
 const routes: RouteConfig[] = [

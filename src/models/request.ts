@@ -1,6 +1,6 @@
 import {Document, Model, model, Schema, SchemaDefinition, Types} from 'mongoose';
-import {loggingConfig} from '../../config/logging.config';
-import {userModel} from '../user';
+import {loggingConfig} from '../config/logging.config';
+import {userModel} from './user';
 
 export interface RequestInterface {
   timestamp: Date
