@@ -19,7 +19,7 @@ export interface SubmissionInterface {
 
   user: Types.ObjectId;
 
-  code: CodeBlockInterface;
+  implementation: CodeBlockInterface;
 
   status: SubmissionStatus;
 }
@@ -29,7 +29,7 @@ export interface SubmissionDocument extends SubmissionInterface, Document<Types.
 export interface SubmissionModelInterface extends Model<SubmissionInterface> {};
 
 const submissionDefinition: SchemaDefinition<SubmissionInterface> = {
-  code: {
+  implementation: {
     type: Schema.Types.Mixed,
   },
 

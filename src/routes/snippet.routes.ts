@@ -1,39 +1,45 @@
 import {executeCode} from '../controllers/code-exec.controller';
-import {find, findById, update} from '../controllers/snippets.controller';
-import {createSubmission, findSubmission} from '../controllers/submissions.controller';
 import {RouteConfig} from '../lib/route.factory';
 import RouteFactory from '../lib/route.factory';
 
+import * as snippet from '../controllers/snippets.controller';
+import * as submission from '../controllers/submissions.controller';
+
 const snippetRoutes: RouteConfig[] = [
   {
-    handler: find,
+    handler: snippet.find,
     method: 'get',
     path: '/',
   },
   {
-    handler: findById,
+    handler: snippet.findById,
     method: 'get',
     path: '/:id',
   },
   {
-    handler: update,
+    handler: snippet.update,
     method: 'put',
     path: '/:id',
   },
   {
-    handler: createSubmission,
+    handler: submission.create,
     method: 'post',
     path: '/:id/submission',
   },
   {
-    handler: findSubmission,
+    handler: submission.find,
     method: 'get',
     path: '/:id/submission',
   },
   {
+    handler: submission.findOrCreate,
+    method: 'post',
+    path: '/:id/submission/findOrCreate',
+  },
+  {
     handler: executeCode,
     method: 'post',
-    path: '/:id/exec',
+    path: '/:id/submission/exec',
   },
 ];
 
