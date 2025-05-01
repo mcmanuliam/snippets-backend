@@ -37,7 +37,7 @@ interface RedisConfig {
 export const platformConfig: PlatformConfig = {
   cookie: {
     localLifespan: 1000 * 60 * 60 * 24 * 5,
-    name: '__snippets.sid',
+    name: '__bytedsized.sid',
     secret: env('JWT_SECRET'),
   },
 

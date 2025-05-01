@@ -18,7 +18,7 @@ export interface SignatureInterface {
   language: number;
 }
 
-export interface SnippetInterface {
+export interface PostInterface {
   title: string;
 
   image?: string;
@@ -37,10 +37,10 @@ export interface SnippetInterface {
 }
 
 
-export interface SnippetDocument extends SnippetInterface, Document<Types.ObjectId> {};
-export interface SnippetModelInterface extends Model<SnippetInterface> {};
+export interface PostDocument extends PostInterface, Document<Types.ObjectId> {};
+export interface PostModelInterface extends Model<PostInterface> {};
 
-const snippetDefinition: SchemaDefinition<SnippetInterface> = {
+const postDefinition: SchemaDefinition<PostInterface> = {
   deleted: {
     type: Boolean,
   },
@@ -83,9 +83,9 @@ const snippetDefinition: SchemaDefinition<SnippetInterface> = {
   },
 };
 
-const schema = new Schema<SnippetInterface, SnippetModelInterface>(snippetDefinition, {
-  collection: 'snippet',
+const schema = new Schema<PostInterface, PostModelInterface>(postDefinition, {
+  collection: 'post',
   timestamps: true,
 });
 
-export const snippetModel = model<SnippetInterface, SnippetModelInterface>('snippet', schema);
+export const postModel = model<PostInterface, PostModelInterface>('post', schema);

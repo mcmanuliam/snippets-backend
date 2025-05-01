@@ -2,22 +2,22 @@ import {executeCode} from '../controllers/code-exec.controller';
 import {RouteConfig} from '../lib/route.factory';
 import RouteFactory from '../lib/route.factory';
 
-import * as snippet from '../controllers/snippets.controller';
+import * as post from '../controllers/post.controller';
 import * as submission from '../controllers/submissions.controller';
 
-const snippetRoutes: RouteConfig[] = [
+const postRoutes: RouteConfig[] = [
   {
-    handler: snippet.find,
+    handler: post.find,
     method: 'get',
     path: '/',
   },
   {
-    handler: snippet.findById,
+    handler: post.findById,
     method: 'get',
     path: '/:id',
   },
   {
-    handler: snippet.update,
+    handler: post.update,
     method: 'put',
     path: '/:id',
   },
@@ -44,6 +44,6 @@ const snippetRoutes: RouteConfig[] = [
 ];
 
 const router = new RouteFactory();
-router.registerRoutes(snippetRoutes);
+router.registerRoutes(postRoutes);
 
 export default router.getRouter();

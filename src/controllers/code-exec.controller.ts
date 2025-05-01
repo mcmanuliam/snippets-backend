@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {snippetModel, SnippetDocument} from '../models/snippet';
+import {postModel, PostDocument} from '../models/post';
 import {Judge0RemoteCodeExecutionImpl} from '../lib/remote-code-exec/judge.impl';
 
 const provider = new Judge0RemoteCodeExecutionImpl();
@@ -13,12 +13,12 @@ export async function executeCode(req: Request, res: Response): Promise<void> {
   const id = req.params.id;
 
   try {
-    const snippet = await snippetModel.findById<SnippetDocument>(id);
-    if (!snippet) {
+    const post = await postModel.findById<PostDocument>(id);
+    if (!post) {
       return res.notFound();
     }
 
-    const {language} = snippet.signature;
+    const {language} = post.signature;
     const results = await provider.executeCode(code, language);
 
     return res.ok(results);

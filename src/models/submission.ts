@@ -1,6 +1,6 @@
 import {Document, model, Model, Schema, SchemaDefinition, Types} from 'mongoose';
 import {userModel} from './user';
-import {snippetModel} from './snippet';
+import {postModel} from './post';
 
 enum SubmissionStatus {
   DRAFT = 'draft',
@@ -15,7 +15,7 @@ export interface CodeBlockInterface {
 }
 
 export interface SubmissionInterface {
-  snippet: Types.ObjectId;
+  post: Types.ObjectId;
 
   user: Types.ObjectId;
 
@@ -33,8 +33,8 @@ const submissionDefinition: SchemaDefinition<SubmissionInterface> = {
     type: Schema.Types.Mixed,
   },
 
-  snippet: {
-    ref: snippetModel.collection.name,
+  post: {
+    ref: postModel.collection.name,
     required: true,
     type: Schema.Types.ObjectId,
   },

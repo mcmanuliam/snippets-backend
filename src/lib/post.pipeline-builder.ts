@@ -1,17 +1,17 @@
 import {submissionModel} from '../models/submission';
-import {snippetsConfig} from '../config/snippets.config';
+import {postConfig} from '../config/post.config';
 import {PipelineStage} from 'mongoose';
 
-export interface SnippetsPipelineOpts {
+export interface PostPipelineOpts {
   populateHot?: boolean;
 }
 
-export class SnippetsPipelineBuilder {
-  readonly #opts: Partial<SnippetsPipelineOpts> = {};
+export class PostPipelineBuilder {
+  readonly #opts: Partial<PostPipelineOpts> = {};
 
   #pipeline: PipelineStage[] = [];
 
-  public constructor(opts: Partial<SnippetsPipelineOpts> = {}) {
+  public constructor(opts: Partial<PostPipelineOpts> = {}) {
     this.#opts = opts;
   }
 
@@ -38,7 +38,7 @@ export class SnippetsPipelineBuilder {
       {
         $lookup: {
           as: 'submission',
-          foreignField: 'snippet',
+          foreignField: 'post',
           from: submissionModel.collection.name,
           localField: '_id',
         },
@@ -59,7 +59,7 @@ export class SnippetsPipelineBuilder {
           hot: {
             $cond: {
               else: null,
-              if: {$gt: [{$size: '$recentSubmissions'}, snippetsConfig.hotThreshold]},
+              if: {$gt: [{$size: '$recentSubmissions'}, postConfig.hotThreshold]},
               then: {$size: '$recentSubmissions'},
             },
           },
