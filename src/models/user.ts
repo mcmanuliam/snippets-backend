@@ -1,13 +1,17 @@
 import {Document, Model, model, Schema, SchemaDefinition, Types} from 'mongoose';
 
 export interface UserInterface {
-  githubId: string;
+  providerId: string;
+
+  provider: string;
 
   username: string;
 
   avatar: string;
 
   title: string;
+
+  refresh: string | undefined;
 }
 
 export interface UserDocument extends UserInterface, Document<Types.ObjectId> {};
@@ -18,10 +22,19 @@ const definition: SchemaDefinition = {
     type: String,
   },
 
-  githubId: {
+  provider: {
+    type: String,
+  },
+
+  providerId: {
     required: true,
     type: String,
     unique: true,
+  },
+
+  refresh: {
+    select: false,
+    type: String,
   },
 
   title: {

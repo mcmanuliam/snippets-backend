@@ -1,7 +1,7 @@
 import {executeCode} from '../controllers/code-exec.controller';
 import {RouteConfig} from '../lib/route.factory';
+import {authenticated} from '../lib/middleware/auth/authenticated';
 import RouteFactory from '../lib/route.factory';
-
 import * as post from '../controllers/post.controller';
 import * as submission from '../controllers/submissions.controller';
 
@@ -9,37 +9,38 @@ const postRoutes: RouteConfig[] = [
   {
     handler: post.find,
     method: 'get',
+    middlewares: [authenticated],
     path: '/',
   },
   {
     handler: post.findById,
     method: 'get',
-    path: '/:id',
+    middlewares: [authenticated],
+    path: '/:id([a-fA-F0-9]{24})',
   },
   {
-    handler: post.update,
-    method: 'put',
-    path: '/:id',
-  },
-  {
-    handler: submission.create,
-    method: 'post',
-    path: '/:id/submission',
-  },
-  {
-    handler: submission.find,
+    handler: post.findDailyChallenge,
     method: 'get',
-    path: '/:id/submission',
+    middlewares: [authenticated],
+    path: '/daily-challenge',
+  },
+  {
+    handler: submission.update,
+    method: 'put',
+    middlewares: [authenticated],
+    path: '/:id([a-fA-F0-9]{24})/submission',
   },
   {
     handler: submission.findOrCreate,
     method: 'post',
-    path: '/:id/submission/findOrCreate',
+    middlewares: [authenticated],
+    path: '/:id([a-fA-F0-9]{24})/submission/findOrCreate',
   },
   {
     handler: executeCode,
     method: 'post',
-    path: '/:id/submission/exec',
+    middlewares: [authenticated],
+    path: '/:id([a-fA-F0-9]{24})/submission/exec',
   },
 ];
 

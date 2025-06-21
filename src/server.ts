@@ -1,7 +1,6 @@
 import {requestLogger, errorLogger} from './lib/logs/request';
 import {responseHelpers} from './util/response-helpers';
 import {platformConfig} from './config/platform.config';
-import {sessionOptions} from './lib/middleware/session';
 import {corsConfig} from './lib/middleware/cors';
 import {loggingConfig} from './config/logging.config';
 import {log} from './lib/logs/logger';
@@ -10,8 +9,8 @@ import appRouter from './routes/routes';
 import {Express} from 'express';
 import {colours} from './util/colours';
 import mongoose from 'mongoose';
-import passport from 'passport';
 import express from 'express';
+import passport from './passport';
 
 const PORT = 3600;
 
@@ -28,19 +27,17 @@ const initialise = async (app: Express) => {
 
     app.use(express.json());
     app.use(cookieParser());
-    app.use(sessionOptions);
 
     app.use(passport.initialize());
-    app.use(passport.session());
 
     if (loggingConfig.requestLogging) {
       app.use(requestLogger);
-      log.verbose('Successfully set up Request Logging');
+      log.info('Successfully set up Request Logging');
     }
 
     if (loggingConfig.errorLogging) {
       app.use(errorLogger);
-      log.verbose('Successfully set up Failure Logging');
+      log.info('Successfully set up Failure Logging');
     }
 
     responseHelpers();

@@ -1,7 +1,6 @@
 import {Request, Response} from 'express';
 import {UserDocument, userModel} from '../models/user';
 import {Types} from 'mongoose';
-import {platformConfig} from '../config/platform.config';
 
 export async function current(req: Request, res: Response): Promise<void> {
   if (!req.user) {
@@ -14,9 +13,9 @@ export async function current(req: Request, res: Response): Promise<void> {
       return res.notFound();
     }
 
-    res.ok(user);
+    return res.ok(user);
   } catch (error) {
-    res.negotiate(error);
+    return res.negotiate(error);
   }
 }
 
@@ -34,38 +33,5 @@ export async function findById(req: Request, res: Response): Promise<void> {
     res.ok(user);
   } catch (error) {
     res.negotiate(error);
-  }
-}
-
-export async function destroy(req: Request, res: Response): Promise<void> {
-  try {
-    const user = req.user as UserDocument;
-    const deletedUser = await userModel.findByIdAndDelete(user._id);
-    if (!deletedUser) {
-      return res.notFound();
-    }
-
-    req.logout((err) => {
-      if (err) {
-        return res.error();
-      }
-
-      req.session.destroy((destroyErr) => {
-        if (destroyErr) {
-          return res.error();
-        }
-
-        res.clearCookie(platformConfig.cookie.name, {
-          httpOnly: true,
-          path: '/',
-          secure: process.env.NODE_ENV === 'production',
-        });
-
-        return res.ok({}, `Successfully deleted User ${user._id.toString()}`);
-      });
-    });
-
-  } catch (error) {
-    return res.negotiate(error);
   }
 }

@@ -1,12 +1,32 @@
-import {PostDocument, postModel} from '../models/post';
+import {postModel} from '../models/post';
 import {Request, Response} from 'express';
-import {Types} from 'mongoose';
-import {submissionModel} from '../models/submission';
-import {PostPipelineBuilder} from '../lib/post.pipeline-builder';
+import {PostPipelineBuilder, PostPipelinePopulateOpts} from '../lib/post.pipeline-builder';
+
+export async function findDailyChallenge(req: Request, res: Response): Promise<void> {
+  try {
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+
+    const post = await postModel.findOne({dailyChallenge: {
+      $gte: startOfDay,
+      $lte: endOfDay,
+    }});
+
+    res.ok(post);
+  } catch (error) {
+    res.negotiate(error);
+  }
+};
 
 export async function find(req: Request, res: Response): Promise<void> {
   try {
-    const builder = new PostPipelineBuilder(req.query ?? {});
+    const populate: PostPipelinePopulateOpts = {
+      hot: true,
+      owner: true,
+    }
+
+    const builder = new PostPipelineBuilder({...req.query, populate}, req.user?._id);
     const pipeline = builder.build();
 
     const posts = await postModel.aggregate(pipeline);
@@ -22,28 +42,20 @@ export async function findById(req: Request, res: Response): Promise<void> {
   }
 
   try {
-    const post = await postModel
-      .findById<PostDocument>(new Types.ObjectId(req.params.id))
-      .populate('user');
+    const populate: PostPipelinePopulateOpts = {
+      hot: true,
+      owner: true,
+    }
 
+    const builder = new PostPipelineBuilder({_id: req.params.id, populate}, req.user?._id);
+    const pipeline = builder.build();
+
+    const [post] = await postModel.aggregate(pipeline);
     if (!post) {
       return res.notFound();
     }
 
     res.ok(post);
-  } catch (error) {
-    res.negotiate(error);
-  }
-};
-
-export async function update(req: Request, res: Response): Promise<void> {
-  if (!req.params.id || !req.body.payload) {
-    return res.badRequest();
-  }
-
-  try {
-    await submissionModel.findByIdAndUpdate<PostDocument>(new Types.ObjectId(req.params.id), req.body.payload)
-    res.ok();
   } catch (error) {
     res.negotiate(error);
   }

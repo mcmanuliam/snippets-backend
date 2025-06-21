@@ -4,6 +4,8 @@ import cors from 'cors';
 const whitelist = new Set([
   'http://localhost:4200',
   'http://localhost:8100',
+  'capacitor://localhost',
+  'bytesized://',
 ]);
 
 const corsOptions: CorsOptions = {

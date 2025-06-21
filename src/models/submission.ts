@@ -2,10 +2,9 @@ import {Document, model, Model, Schema, SchemaDefinition, Types} from 'mongoose'
 import {userModel} from './user';
 import {postModel} from './post';
 
-enum SubmissionStatus {
+export enum SubmissionStatus {
   DRAFT = 'draft',
   SUBMITTED = 'submitted',
-  REVIEWED = 'reviewed',
 }
 
 export interface CodeBlockInterface {
@@ -18,6 +17,10 @@ export interface SubmissionInterface {
   post: Types.ObjectId;
 
   user: Types.ObjectId;
+
+  description?: string;
+
+  timeEstimate?: string;
 
   implementation: CodeBlockInterface;
 

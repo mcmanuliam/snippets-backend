@@ -6,8 +6,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-
   "dependencies": {
+    "@capacitor/preferences": "^7.0.1",
     "axios": "^1.8.4",
     "connect-redis": "^8.0.1",
     "cookie-parser": "^1.4.7",
@@ -19,10 +19,14 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
     "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
     "passport-github2": "^0.1.12",
+    "passport-gitlab2": "^5.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-microsoft": "^2.1.0",
+    "passport-oauth2": "^1.8.0",
     "redis": "^4.7.0"
   },
-
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@types/cookie-parser": "^1.4.8",
@@ -30,9 +34,13 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
-    "@types/jsonwebtoken": "^9.0.8",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.12.0",
+    "@types/passport-discord": "^0.1.14",
     "@types/passport-github2": "^1.2.9",
+    "@types/passport-google-oauth20": "^2.0.16",
+    "@types/passport-microsoft": "^1.0.3",
+    "@types/passport-oauth2": "^1.4.17",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
     "eslint": "^9.19.0",
@@ -41,7 +49,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   },
-
   "scripts": {
     "dev": "nodemon src/server.ts",
     "build": "tsc",

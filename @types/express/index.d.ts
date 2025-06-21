@@ -1,4 +1,5 @@
 import {SessionUser} from '../session-user';
+import 'express-session';
 
 // Extend the `Express.Request` interface to add a custom 'curr' property
 // This allows us to attach the current user to the 'req' object in our routes
@@ -8,6 +9,12 @@ declare global {
     interface User extends SessionUser {}
 
     export interface Response extends ResponseHelpers {}
+  }
+}
+
+declare module 'express-session' {
+  interface SessionData {
+    redirectUri?: string;
   }
 }
 

@@ -1,5 +1,4 @@
 import {Request, Response} from 'express';
-import {redisClient} from '../db/redis';
 import mongoose from 'mongoose';
 import env from '../util/env';
 import os from 'os';
@@ -16,7 +15,6 @@ export function health(_req: Request, res: Response): void {
 
     const services = {
       mongo: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-      redis: redisClient.isOpen ? 'connected' : 'disconnected',
     };
 
     const resources = {

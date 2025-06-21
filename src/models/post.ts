@@ -2,13 +2,9 @@ import {Document, model, Model, Schema, SchemaDefinition, Types} from 'mongoose'
 import {userModel} from './user';
 
 export enum Difficulty {
-  PISS_TAKE = 'piss_take',
-  BEGINNER = 'beginner',
-  AMATEUR = 'amateur',
-  SEMI_COMPITENT = 'semi_compitent',
-  GETTING_TOUGH = 'getting_tough',
-  CHALLENGING = 'challenging',
-  HELL_ON_EARTH = 'hell_on_earth',
+  EASY = 'easy',
+  MEDIUM = 'medium',
+  HARD = 'hard',
   IMPOSSIBLE = 'impossible'
 }
 
@@ -33,6 +29,10 @@ export interface PostInterface {
 
   difficulty: Difficulty;
 
+  dailyChallenge: Date;
+
+  timeEstimate?: number;
+
   deleted?: boolean;
 }
 
@@ -41,6 +41,10 @@ export interface PostDocument extends PostInterface, Document<Types.ObjectId> {}
 export interface PostModelInterface extends Model<PostInterface> {};
 
 const postDefinition: SchemaDefinition<PostInterface> = {
+  dailyChallenge: {
+    type: Date,
+  },
+
   deleted: {
     type: Boolean,
   },
