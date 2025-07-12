@@ -8,7 +8,7 @@ export enum SubmissionStatus {
 }
 
 export interface CodeBlockInterface {
-  language: string;
+  language: number;
 
   code: string;
 }
