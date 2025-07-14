@@ -1,6 +1,7 @@
 import axios, {AxiosError} from 'axios';
 import {AbstractRemoteCodeExecutionImpl, ExecutionResponse} from './abstract-remote-code-exec.impl';
 import env from '../../util/env';
+import {fromBase64, toBase64} from '../../util/to-base-64';
 
 const enum Conf {
   BASE_URL = '/submissions',
@@ -50,12 +51,12 @@ export class Judge0RemoteCodeExecutionImpl extends AbstractRemoteCodeExecutionIm
           cpu_time_limit: Conf.CPU_TIME_LIMIT,
           language_id: language,
           memory_limit: Conf.MEMORY_LIMIT,
-          source_code: code,
+          source_code: toBase64(code),
         },
         {
           headers: this.#headers,
           params: {
-            base64_encoded: 'false',
+            base64_encoded: 'true',
             fields: '*',
             wait: 'true',
           },
@@ -69,19 +70,23 @@ export class Judge0RemoteCodeExecutionImpl extends AbstractRemoteCodeExecutionIm
   }
 
   #handleSubmissionResponse(res: Judge0ApiResponse): ExecutionResponse {
-    if (res.status?.id && res.status.id >= 6) {
-      return {
-        output: (res.message && res.stderr) ? `${res.message}\n${res.stderr}` : ErrorMessages.EXEC_FAILED,
-        peakMemb: res.memory,
-        runtime: parseFloat(res.time),
-      }
-    }
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const {status, stdout, stderr, compile_output, message, memory, time} = res;
+
+    const isFailure = status?.id && status.id >= 6;
+
+    const output =
+      fromBase64(compile_output)?.trim() ||
+      fromBase64(stderr)?.trim() ||
+      fromBase64(stdout)?.trim() ||
+      fromBase64(message)?.trim() ||
+      (isFailure ? ErrorMessages.EXEC_FAILED : ErrorMessages.NO_OUTPUT);
 
     return {
-      output: res.stdout || res.stderr || res.compile_output || ErrorMessages.NO_OUTPUT,
-      peakMemb: res.memory,
-      runtime: parseFloat(res.time),
-    }
+      output,
+      peakMemb: memory,
+      runtime: parseFloat(time),
+    };
   }
 
   #handleSubmissionError(error: unknown): ExecutionResponse {

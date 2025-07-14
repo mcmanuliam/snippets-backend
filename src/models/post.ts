@@ -34,8 +34,9 @@ export interface PostInterface {
   timeEstimate?: number;
 
   deleted?: boolean;
-}
 
+  official: boolean;
+}
 
 export interface PostDocument extends PostInterface, Document<Types.ObjectId> {};
 export interface PostModelInterface extends Model<PostInterface> {};
@@ -62,6 +63,10 @@ const postDefinition: SchemaDefinition<PostInterface> = {
 
   image: {
     type: String,
+  },
+
+  official: {
+    type: Boolean,
   },
 
   signature: {
